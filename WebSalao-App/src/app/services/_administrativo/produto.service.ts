@@ -1,17 +1,15 @@
-import { Produto } from 'src/app/_models/_Administrativos/ProdutoModels';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { Produto } from 'src/app/models/_Administrativos/produtoModels';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class ProdutoService {
   baseURL = 'http://localhost:5000/api/produto';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllProduto(): Observable<Produto[]> {
     return this.http.get<Produto[]>(this.baseURL);

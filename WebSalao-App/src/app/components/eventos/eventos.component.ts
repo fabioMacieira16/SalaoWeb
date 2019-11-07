@@ -1,10 +1,10 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { EventoService } from '../_services/evento.service';
 import { Evento } from '../_models/Evento';
 import { BsModalService } from 'ngx-bootstrap';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { defineLocale, BsLocaleService, ptBrLocale } from 'ngx-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { EventoService } from 'src/app/services/evento.service';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -14,7 +14,6 @@ defineLocale('pt-br', ptBrLocale);
   styleUrls: ['./eventos.component.css']
 })
 export class EventosComponent implements OnInit {
-
   titulo = 'Eventos';
   dataEvento: string;
   eventosFiltrados: Evento[];
@@ -34,11 +33,11 @@ export class EventosComponent implements OnInit {
   _filtroLista = '';
 
   constructor(
-    private eventoService: EventoService
-    , private modalService: BsModalService
-    , private fb: FormBuilder
-    , private localeService: BsLocaleService
-    , private toastr: ToastrService
+    private eventoService: EventoService,
+    private modalService: BsModalService,
+    private fb: FormBuilder,
+    private localeService: BsLocaleService,
+    private toastr: ToastrService
   ) {
     this.localeService.use('pt-br');
   }
@@ -78,7 +77,8 @@ export class EventosComponent implements OnInit {
         template.hide();
         this.getEventos();
         this.toastr.success('Deletado com Sucesso');
-      }, error => {
+      },
+      error => {
         this.toastr.error('Erro ao tentar Deletar');
         console.log(error);
       }
@@ -97,7 +97,8 @@ export class EventosComponent implements OnInit {
             template.hide();
             this.getEventos();
             this.toastr.success('Inserido com Sucesso!');
-          }, error => {
+          },
+          error => {
             this.toastr.error(`Erro ao Inserir: ${error}`);
           }
         );
@@ -111,14 +112,15 @@ export class EventosComponent implements OnInit {
             template.hide();
             this.getEventos();
             this.toastr.success('Editado com Sucesso!');
-          }, error => {
+          },
+          error => {
             this.toastr.error(`Erro ao Editar: ${error}`);
           }
         );
       }
     }
   }
-//#endregion
+  //#endregion
 
   openModal(template: any) {
     this.registerForm.reset();
@@ -132,9 +134,7 @@ export class EventosComponent implements OnInit {
 
   filtrarEventos(filtrarPor: string): Evento[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
-    return this.eventos.filter(
-      evento => evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1
-    );
+    return this.eventos.filter(evento => evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1);
   }
 
   validation() {
@@ -168,22 +168,16 @@ export class EventosComponent implements OnInit {
       const nomeArquivo = this.evento.imagemURL.split('\\', 3);
       this.evento.imagemURL = nomeArquivo[2];
 
-      this.eventoService.postUpload(this.file, nomeArquivo[2])
-        .subscribe(
-          () => {
-            this.dataAtual = new Date().getMilliseconds().toString();
-            this.getEventos();
-          }
-        );
+      this.eventoService.postUpload(this.file, nomeArquivo[2]).subscribe(() => {
+        this.dataAtual = new Date().getMilliseconds().toString();
+        this.getEventos();
+      });
     } else {
       this.evento.imagemURL = this.fileNameToUpdate;
-      this.eventoService.postUpload(this.file, this.fileNameToUpdate)
-        .subscribe(
-          () => {
-            this.dataAtual = new Date().getMilliseconds().toString();
-            this.getEventos();
-          }
-        );
+      this.eventoService.postUpload(this.file, this.fileNameToUpdate).subscribe(() => {
+        this.dataAtual = new Date().getMilliseconds().toString();
+        this.getEventos();
+      });
     }
   }
 
@@ -195,9 +189,10 @@ export class EventosComponent implements OnInit {
         this.eventos = _eventos;
         this.eventosFiltrados = this.eventos;
         // console.log(this.eventos);
-      }, error => {
+      },
+      error => {
         this.toastr.error(`Erro ao tentar Carregar eventos: ${error}`);
-      });
+      }
+    );
   }
-
 }
