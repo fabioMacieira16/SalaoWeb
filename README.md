@@ -35,13 +35,6 @@ The Summary is:
   06. System.IdentityModel.Tokens.Jwt(Api)
   07. Microsoft.AspNetCore.Identity(Api)
   08. Microsoft.WebApplication.targets(Repositoy)
-  09. 
-  10. 
-  11. 
-  12. 
-  13. 
-  14. 
-  15. 
 
 ## User Settings
 
