@@ -1,9 +1,8 @@
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { Produto } from 'src/app/_models/_Administrativos/produtoModels';
 import { ToastrService } from 'ngx-toastr';
-import { ProdutoService } from 'src/app/_services/_administrativo/produto.service';
-
+import { Produto } from 'src/app/models/_Administrativos/produtoModels';
+import { ProdutoService } from 'src/app/services/_administrativo/produto.service';
 
 @Component({
   selector: 'app-produtos',
@@ -11,7 +10,6 @@ import { ProdutoService } from 'src/app/_services/_administrativo/produto.servic
   styles: []
 })
 export class ProdutosComponent implements OnInit {
-
   titulo = 'Produtos';
   produtosFiltrados: Produto[];
   produtos: Produto[];
@@ -24,11 +22,7 @@ export class ProdutosComponent implements OnInit {
   dataAtual: string;
   _filtraPoduto = '';
 
-  constructor(
-    private produtoService: ProdutoService,
-    private fb: FormBuilder,
-    private toastr: ToastrService
-  ) { }
+  constructor(private produtoService: ProdutoService, private fb: FormBuilder, private toastr: ToastrService) {}
 
   //#region Crud - Filtros - Salvar - editar - excluirs
   get filtroProduto(): string {
@@ -63,7 +57,8 @@ export class ProdutosComponent implements OnInit {
       () => {
         template.hide();
         this.toastr.success('Deletado com Sucesso');
-      }, error => {
+      },
+      error => {
         this.toastr.error('Erro ao tentar Deletar');
         console.log(error);
       }
@@ -79,7 +74,8 @@ export class ProdutosComponent implements OnInit {
           (novoEvento: Produto) => {
             template.hide();
             this.toastr.success('Inserido com Sucesso!');
-          }, error => {
+          },
+          error => {
             this.toastr.error(`Erro ao Inserir: ${error}`);
           }
         );
@@ -91,7 +87,8 @@ export class ProdutosComponent implements OnInit {
             template.hide();
             this.getProdutos();
             this.toastr.success('Editado com Sucesso!');
-          }, error => {
+          },
+          error => {
             this.toastr.error(`Erro ao Editar: ${error}`);
           }
         );
@@ -106,24 +103,21 @@ export class ProdutosComponent implements OnInit {
   }
 
   ngOnInit() {
-   this.validation(); // Valida Formulário
+    this.validation(); // Valida Formulário
     this.getProdutos();
   }
 
   filtrarProdutos(filtrorPor: string): Produto[] {
     filtrorPor = filtrorPor.toLocaleLowerCase();
-    return this.produtos.filter(
-      produto => produto.descricao.toLocaleLowerCase().indexOf(filtrorPor) !== -1
-    );
+    return this.produtos.filter(produto => produto.descricao.toLocaleLowerCase().indexOf(filtrorPor) !== -1);
   }
 
   validation() {
     this.registerForm = this.fb.group({
       descricao: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
-      fornecedor: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
+      fornecedor: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]]
     });
   }
-
 
   // Busca a lista de produtos
   getProdutos() {
@@ -133,10 +127,10 @@ export class ProdutosComponent implements OnInit {
         this.produtos = _produto;
         this.produtosFiltrados = this.produtos;
         console.log(this.produtos);
-      }, error => {
+      },
+      error => {
         this.toastr.error(`Erro ao tentar carregar os Produtos: ${error}`);
-      });
+      }
+    );
   }
 }
-
-

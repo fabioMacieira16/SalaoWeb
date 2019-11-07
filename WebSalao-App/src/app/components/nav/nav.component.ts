@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../_services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-nav',
@@ -9,13 +9,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnInit {
+  constructor(public authService: AuthService, public router: Router, private toastr: ToastrService) {}
 
-  constructor(public authService: AuthService
-    , public router: Router
-    , private toastr: ToastrService) { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   showMenu() {
     return this.router.url !== '/user/login';

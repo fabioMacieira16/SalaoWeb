@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { EventoService } from 'src/app/_services/evento.service';
 import { BsLocaleService } from 'ngx-bootstrap';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Evento } from 'src/app/_models/Evento';
 import { ActivatedRoute } from '@angular/router';
+import { Evento } from 'src/app/models/Evento';
+import { EventoService } from 'src/app/services/evento.service';
 
 @Component({
   selector: 'app-evento-edit',
@@ -12,7 +12,6 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./eventoEdit.component.css']
 })
 export class EventoEditComponent implements OnInit {
-
   titulo = 'Editar Evento';
   evento: Evento = new Evento();
   imagemURL = 'assets/img/upload.png';
@@ -31,11 +30,11 @@ export class EventoEditComponent implements OnInit {
   }
 
   constructor(
-    private eventoService: EventoService
-    , private fb: FormBuilder
-    , private localeService: BsLocaleService
-    , private toastr: ToastrService
-    , private router: ActivatedRoute
+    private eventoService: EventoService,
+    private fb: FormBuilder,
+    private localeService: BsLocaleService,
+    private toastr: ToastrService,
+    private router: ActivatedRoute
   ) {
     this.localeService.use('pt-br');
   }
@@ -47,25 +46,22 @@ export class EventoEditComponent implements OnInit {
 
   carregarEvento() {
     const idEvento = +this.router.snapshot.paramMap.get('id');
-    this.eventoService.getEventoById(idEvento)
-      .subscribe(
-        (evento: Evento) => {
-          this.evento = Object.assign({}, evento);
-          this.fileNameToUpdate = evento.imagemURL.toString();
+    this.eventoService.getEventoById(idEvento).subscribe((evento: Evento) => {
+      this.evento = Object.assign({}, evento);
+      this.fileNameToUpdate = evento.imagemURL.toString();
 
-          this.imagemURL = `http://localhost:5000/resources/images/${this.evento.imagemURL}?_ts=${this.dataAtual}`;
+      this.imagemURL = `http://localhost:5000/resources/images/${this.evento.imagemURL}?_ts=${this.dataAtual}`;
 
-          this.evento.imagemURL = '';
-          this.registerForm.patchValue(this.evento);
+      this.evento.imagemURL = '';
+      this.registerForm.patchValue(this.evento);
 
-          this.evento.lotes.forEach(lote => {
-            this.lotes.push(this.criaLote(lote));
-          });
-          this.evento.redesSociais.forEach(redeSocial => {
-            this.redesSociais.push(this.criaRedeSocial(redeSocial));
-          });
-        }
-      );
+      this.evento.lotes.forEach(lote => {
+        this.lotes.push(this.criaLote(lote));
+      });
+      this.evento.redesSociais.forEach(redeSocial => {
+        this.redesSociais.push(this.criaRedeSocial(redeSocial));
+      });
+    });
   }
 
   validation() {
@@ -121,7 +117,7 @@ export class EventoEditComponent implements OnInit {
   onFileChange(evento: any, file: FileList) {
     const reader = new FileReader();
 
-    reader.onload = (event: any) => this.imagemURL = event.target.result;
+    reader.onload = (event: any) => (this.imagemURL = event.target.result);
 
     this.file = evento.target.files;
     reader.readAsDataURL(file[0]);
@@ -136,7 +132,8 @@ export class EventoEditComponent implements OnInit {
     this.eventoService.putEvento(this.evento).subscribe(
       () => {
         this.toastr.success('Editado com Sucesso!');
-      }, error => {
+      },
+      error => {
         this.toastr.error(`Erro ao Editar: ${error}`);
       }
     );
@@ -144,14 +141,10 @@ export class EventoEditComponent implements OnInit {
 
   uploadImagem() {
     if (this.registerForm.get('imagemURL').value !== '') {
-      this.eventoService.postUpload(this.file, this.fileNameToUpdate)
-        .subscribe(
-          () => {
-            this.dataAtual = new Date().getMilliseconds().toString();
-            this.imagemURL = `http://localhost:5000/resources/images/${this.evento.imagemURL}?_ts=${this.dataAtual}`;
-          }
-        );
+      this.eventoService.postUpload(this.file, this.fileNameToUpdate).subscribe(() => {
+        this.dataAtual = new Date().getMilliseconds().toString();
+        this.imagemURL = `http://localhost:5000/resources/images/${this.evento.imagemURL}?_ts=${this.dataAtual}`;
+      });
     }
   }
-
 }
